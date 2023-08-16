@@ -35,8 +35,7 @@ def fullscreen():
     map = folium.Map(location=(address_latlng), zoom_start=14)
     
     # add marker to map
-    folium.Marker(address_latlng, popup='London', tooltip='click').add_to(map)
-
+    folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='cloud')).add_to(map)
     minimap = plugins.MiniMap(toggle_display=True)
 
     # add minimap to map
@@ -46,13 +45,12 @@ def fullscreen():
     mcg = folium.plugins.MarkerCluster(control=False)
     map.add_child(mcg)
 
-    # add search bar
-    servicesearch = Search(
-        position='topright',
-        layer=mcg,
-        geom_type='Point',
-        placeholder='Search for a location',
-        collapsed=False,
+    # adds search bar 
+    plugins.Geocoder(
+        collapsed=False, 
+        position='topright', 
+        add_marker=True,
+        layer='osm'
     ).add_to(map)
 
     # add full screen button to map
@@ -68,8 +66,19 @@ def fullscreen():
     # add scroll zoom toggler to map
     # plugins.ScrollZoomToggler().add_to(map)
 
-    # add layer control to show different maps
+    # add layer control to show different map types
     folium.LayerControl().add_to(map)
+
+    # add route plotting
+    route_lats_longs = [[51.4957, -0.1448], #London Victoria
+                        [51.5020, -0.1401], #Buckingham Palace
+                        [51.5074, -0.1276], #Trafalgar Square
+                        [51.5010, -0.1262], #Parliament Square
+                        [51.4977, -0.1347], #Part way back (for road bend)
+                        [51.4957, -0.1448],] #Back to London Victoria
+
+    plugins.AntPath(route_lats_longs).add_to(map)
+
 
     return map.get_root().render()
 
