@@ -17,8 +17,9 @@
 from flask import Flask, render_template_string
 import folium
 from folium import plugins
-from folium.plugins import Search, MarkerCluster
+from folium.plugins import MarkerCluster
 import geocoder
+
 
 app = Flask(__name__)
 
@@ -35,10 +36,11 @@ def fullscreen():
     map = folium.Map(location=(address_latlng), zoom_start=14)
     
     # add marker to map
-    folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='cloud')).add_to(map)
-    minimap = plugins.MiniMap(toggle_display=True)
+    marker = folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='cloud'))
+    map.add_child(marker)
 
     # add minimap to map
+    minimap = plugins.MiniMap(toggle_display=True)
     map.add_child(minimap)
 
     # make Marker Cluster Group layer
@@ -141,6 +143,25 @@ def components():
         body_html=body_html,
         script=script,
     )
+
+@app.route("/example")
+def exampleroute():
+    # get location information for address
+    address = geocoder.osm('Victoria St, London SW1E 5ND')
+    
+    # store the address latitude and longitude in a variable
+    address_latlng = [address.lat, address.lng]
+
+    # turn the map on and focus in on the stored address variable at zoom level 14
+    map = folium.Map(location=(address_latlng), zoom_start=14)
+
+    # add marker to map
+    marker = folium.Marker(address_latlng, popup='London Victoria', tooltip='click me', icon=folium.Icon(color='blue', icon_color='black', prefix='fa', icon='magnifying-glass'))
+    marker.add_to(map)
+
+    # return
+    return map.get_root().render()
+
 
 
 if __name__ == "__main__":
