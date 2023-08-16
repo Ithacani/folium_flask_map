@@ -27,15 +27,16 @@ app = Flask(__name__)
 @app.route("/")
 def fullscreen():
     """Simple example of a fullscreen map."""
-    # get location information for address
+    # get location information for a pre-set address
     address = geocoder.osm('Victoria St, London SW1E 5ND')
     
-    # address latitude and longitude
+    # Extract the lat long and store as a variable
     address_latlng = [address.lat, address.lng]
     
+    # Now turn the map on
     map = folium.Map(location=(address_latlng), zoom_start=14)
     
-    # add marker to map
+    # add the pre-set marker to map
     marker = folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='cloud'))
     map.add_child(marker)
 
@@ -45,7 +46,7 @@ def fullscreen():
 
     # make Marker Cluster Group layer
     mcg = folium.plugins.MarkerCluster(control=False)
-    map.add_child(mcg)
+    mcg.add_to(map)
 
     # adds search bar 
     plugins.Geocoder(
@@ -68,9 +69,6 @@ def fullscreen():
     # add scroll zoom toggler to map
     # plugins.ScrollZoomToggler().add_to(map)
 
-    # add layer control to show different map types
-    folium.LayerControl().add_to(map)
-
     # add route plotting
     route_lats_longs = [[51.4957, -0.1448], #London Victoria
                         [51.5020, -0.1401], #Buckingham Palace
@@ -81,6 +79,8 @@ def fullscreen():
 
     plugins.AntPath(route_lats_longs).add_to(map)
 
+    # add layer control to show different map types - do this last
+    folium.LayerControl().add_to(map)
 
     return map.get_root().render()
 
