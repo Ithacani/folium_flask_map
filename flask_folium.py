@@ -33,11 +33,15 @@ def fullscreen():
     # Extract the lat long and store as a variable
     address_latlng = [address.lat, address.lng]
     
-    # Now turn the map on
+    # Now turn the map on using address_latlng as starting focus
     map = folium.Map(location=(address_latlng), zoom_start=14)
+
+    # add a buffer variable as a child to the map.  Radius = 500 meters
+    buffer = folium.Circle([address.lat, address.lng], radius=500)
+    map.add_child(buffer)
     
     # add the pre-set marker to map
-    marker = folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='cloud'))
+    marker = folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='magnifying-glass'))
     map.add_child(marker)
 
     # add minimap to map
@@ -51,7 +55,7 @@ def fullscreen():
     # adds search bar 
     plugins.Geocoder(
         collapsed=False, 
-        position='topright', 
+        position='topleft', 
         add_marker=True,
         layer='osm'
     ).add_to(map)
