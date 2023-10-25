@@ -36,10 +36,9 @@ def fullscreen():
     # Now turn the map on using address_latlng as starting focus
     map = folium.Map(location=(address_latlng), zoom_start=14)
 
-    # add a buffer variable as a child to the map.  Radius = 500 meters
-    buffer = folium.Circle([address.lat, address.lng], radius=500)
-    map.add_child(buffer)
-    
+    # add a buffer variable as a child to the map.  Radius = 500 meters.  Colour = white.  Filled.
+    folium.Circle([address.lat, address.lng], radius=500, color='white', fill=True).add_child(folium.Popup('This is a circle')).add_to(map)
+        
     # add the pre-set marker to map
     marker = folium.Marker(address_latlng, popup='London', tooltip='click', icon=folium.Icon(color='orange',icon_color='white',prefix='fa', icon='magnifying-glass'))
     map.add_child(marker)
@@ -52,7 +51,7 @@ def fullscreen():
     mcg = folium.plugins.MarkerCluster(control=False)
     mcg.add_to(map)
 
-    # adds search bar 
+    # adds Geocoder search bar 
     plugins.Geocoder(
         collapsed=False, 
         position='topleft', 
