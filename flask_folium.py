@@ -35,6 +35,28 @@ def fullscreen():
     
     # Now turn the map on using address_latlng as starting focus
     map = folium.Map(location=(address_latlng), zoom_start=14)
+    """ Map calls the following with internet connection:
+    leaflet.js
+    leaflet.css
+    leaflet.awesome-markers.js
+    leaflet.awesome-markers.css
+    leaflet.awesome.rotate.min.css
+    leaflet.markercluster.js
+    leaflet-ant-path.min.js
+    MarkerCluster.css
+    MarkerCluster.Default.css
+    jquery-1.12.4.min.js
+    bootstrap.bundle.min.js
+    bootstrap.min.css
+    all.min.css
+    Control.MiniMap.js
+    Control.MiniMap.css
+    Control.Geocoder.js
+    Control.Geocoder.css
+    Control.FullScreen.min.js
+    Control.FullScreen.min.css
+    
+     """
 
     # add a buffer variable as a child to the map.  Radius = 500 meters.  Colour = white.  Filled.
     folium.Circle([address.lat, address.lng], radius=500, color='white', fill=True).add_child(folium.Popup('This is a circle')).add_to(map)
